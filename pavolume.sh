@@ -22,6 +22,8 @@
 # Save argument to variable
 opt=$1
 
+# Set constant for max volume
+MAX=100
 # Get pulse audio active sink
 sink=$(pacmd list-sinks | grep \* | awk '{print $3}')
 
@@ -37,9 +39,12 @@ else
 
 	# Check the volume
 	new_vol=$(pacmd list-sinks | grep '^[[:space:]]volume:' | head -n $(( $sink + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,')
-	# If the volume is above 100%
-	if [ $new_vol -gt 100 ]; then
-		# Set it to 100%
-		pactl set-sink-volume $sink 100%
+	# If the volume is above max%
+	if [ $new_vol -gt $MAX ]; then
+		# Set it to the max
+		pactl set-sink-volume $sink $MAX%
 	fi
+
+	# Unmute sink in case it was muted
+	pactl set-sink-mute $sink 0
 fi
