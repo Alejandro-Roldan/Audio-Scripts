@@ -19,19 +19,21 @@
 #	pavolume.sh unmute
 #	pavolume.sh toggle   # mute/unmute
 
+# Save argument to variable
+opt=$1
 
 # Get pulse audio active sink
 sink=$(pacmd list-sinks | grep \* | awk '{print $3}')
 
-if [[ $1 == 'mute' ]]; then	
+if [[ $opt == 'mute' ]]; then	
 	pactl set-sink-mute $sink 1
-elif [[ $1 = 'unmute' ]]; then
+elif [[ $opt = 'unmute' ]]; then
 	pactl set-sink-mute $sink 0
-elif [[ $1 == 'toggle' ]]; then
+elif [[ $opt == 'toggle' ]]; then
 	pactl set-sink-mute $sink toggle
 else
 	# Change active sink volume
-	pactl set-sink-volume $sink $1%
+	pactl set-sink-volume $sink $opt%
 
 	# Check the volume
 	new_vol=$(pacmd list-sinks | grep '^[[:space:]]volume:' | head -n $(( $sink + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,')
