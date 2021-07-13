@@ -55,7 +55,6 @@ case $opt in
 		fi
 
 		# Change active sink volume
-		# pactl set-sink-volume @DEFAULT_SINK@ $opt%
 		pactl set-sink-volume $sink $opt%
 
 		# Unmute sink in case it was muted
